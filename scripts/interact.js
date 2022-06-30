@@ -11,7 +11,7 @@ async function interact() {
     const contract = new hre.ethers.Contract(process.env["CONTRACT_ADDR"], abi, signer)
     
     // // 1
-    // let transaction = await contract.addBook(["Boat",5])
+    // let transaction = await contract.addBook("Boat",5)
     // let receipt = await transaction.wait()
 
     // if(receipt.status !== 1){
@@ -21,7 +21,7 @@ async function interact() {
     // console.log(`Book added to store`)
 
     // // 1.1
-    // transaction = await contract.addBook(["Plane",5])
+    // transaction = await contract.addBook("Plane",5)
     // receipt = await transaction.wait()
 
     // if(receipt.status !== 1){
@@ -59,15 +59,15 @@ async function interact() {
     // receipt =  await transaction.wait()
     // console.log("Book Rented")
 
-    // bookCount = await contract.checkBookCount("Boat")
-    // console.log(`Books count,  ${bookCount}`)
+    bookCount = await contract.checkBookCount("Boat")
+    console.log(`Books count,  ${bookCount}`)
 
     // 3.4
     let rentners = await contract.showRenters("Boat")
     console.log(`Rentners,  ${rentners}`)
 
     // 4
-    transaction = await contract.returnBook("Boating")
+    transaction = await contract.returnBook("Boat")
     receipt =  await transaction.wait()
     console.log("Book returned")
 

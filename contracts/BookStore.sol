@@ -20,13 +20,13 @@ contract BookStore {
    struct Book {
        string name;
        uint256 count;
+       address[] renters;
    }
    
    string[] public availableBooks;
    mapping( string => bool ) public checkBook;
    mapping ( string => uint256 ) public checkBookCount;
    mapping (string => Book ) private booksMap;
-   mapping( string => address[]) private checkRenters;
 
    modifier isAvailable(string calldata  _name){
        if(!checkBook[_name]){
@@ -44,22 +44,23 @@ contract BookStore {
    }
 
    function showRenters (string calldata _name) external view returns (address[] memory){
-       return checkRenters[_name];
+       return booksMap[_name].renters;
    }
    
-   function addBook(Book calldata book) external {
-       if(checkBook[book.name]){
+   function addBook(string calldata _name, uint _count) external {
+       if(checkBook[_name]){
            revert BookAlreadyExists();
        }
 
-       Book memory newBook = Book({name:book.name,count:book.count});
+       address[] memory renterArr;
+       Book memory newBook = Book({name:_name, count:_count, renters:renterArr});
        
-       availableBooks.push(book.name);
-       checkBook[book.name] = true;
-       checkBookCount[book.name] = book.count;
-       booksMap[book.name] = newBook;
+       availableBooks.push(_name);
+       checkBook[_name] = true;
+       checkBookCount[_name] = _count;
+       booksMap[_name] = newBook;
 
-       emit NewBookAdded(book.name,book.count);
+       emit NewBookAdded(_name,_count);
    }
 
    function rentBook(string calldata _name) external isAvailable(_name){
@@ -68,12 +69,12 @@ contract BookStore {
        }
        
        checkBookCount[_name] -= 1;
-       checkRenters[_name].push(msg.sender);
+       booksMap[_name].renters.push(msg.sender);
 
        emit BookRented(_name, msg.sender);
    }
 
-   function AllBooksReturned(string calldata _name) external isAvailable(_name) {
+   function returnBook(string calldata _name) external isAvailable(_name) {
     //    Don't allow returning more books, than initially available in the library
         if(checkBookCount[_name] == booksMap[_name].count){
            revert AllCopiesReturned(booksMap[_name].count);
