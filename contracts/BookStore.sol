@@ -6,16 +6,18 @@ import "hardhat/console.sol";
 contract BookStore {
 
    struct Book {
-       bool available;
        string name;
-       bool rented;
+       int count;
    }
    
    string[] public availableBooks;
-   mapping( string => Book ) booksMap;
+   mapping( string => bool ) checkBook;
+   mapping ( string => int )  checkBookCount;
+   mapping (string => Book ) private booksMap;
+   mapping( string => address[]) checkRenters;
 
    modifier isAvailable(string calldata  _name){
-       require(booksMap[_name].available, "Book is not available");
+       require(checkBook[_name], "Book is not available");
        _;
    }
 
@@ -23,40 +25,35 @@ contract BookStore {
        return availableBooks;
    }
    
-   function addBook(string calldata _name) external {
-       if(booksMap[_name].available){
+   function addBook(Book calldata book) external {
+       if(checkBook[book.name]){
            revert("Book already exists");
        }
 
-       Book memory newBook = Book({available:true,name:_name,rented:false});
+       Book memory newBook = Book({name:book.name,count:book.count});
        
-       booksMap[_name] = newBook;
-       availableBooks.push(_name);
+       availableBooks.push(book.name);
+       checkBook[book.name] = true;
+       checkBookCount[book.name] = book.count;
+       booksMap[book.name] = book;
    }
 
    function rentBook(string calldata _name) external isAvailable(_name){
-       if(booksMap[_name].rented){
-           revert("Book is rented already");
+       if(checkBookCount[_name] < 1){
+           revert("No currently available copies");
        }
        
-       booksMap[_name].rented = true;
-   }
-
-   function isRented(string calldata _name) external view isAvailable(_name) returns (bool){
-     return booksMap[_name].rented;
-   }
-
-   function checkAvailability(string calldata _name) external view returns (bool){
-     return booksMap[_name].available;
+       checkBookCount[_name] -= 1;
+       checkRenters[_name].push(msg.sender);
    }
 
    function returnBook(string calldata _name) external isAvailable(_name) {
-       
-        if(!booksMap[_name].rented){
-           revert("Book is not rented currently");
+    //    Don't allow returning more books, than initially available in the library
+        if(checkBookCount[_name] == booksMap[_name].count){
+           revert("All copies have been returned already");
        }
 
-        booksMap[_name].rented = false;
+        checkBookCount[_name] += 1;
 
    }
 
