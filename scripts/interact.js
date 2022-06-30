@@ -10,64 +10,64 @@ async function interact() {
     const signer =  new hre.ethers.Wallet(process.env["PRIVATE_KEY"],provider)
     const contract = new hre.ethers.Contract(process.env["CONTRACT_ADDR"], abi, signer)
     
-    // 1
-    let transaction = await contract.addBook(["Boat",5])
-    let receipt = await transaction.wait()
+    // // 1
+    // let transaction = await contract.addBook(["Boat",5])
+    // let receipt = await transaction.wait()
 
-    if(receipt.status !== 1){
-      console.log("Transaction failed")
-      return
-    }
-    console.log(`Book added to store`)
+    // if(receipt.status !== 1){
+    //   console.log("Transaction failed")
+    //   return
+    // }
+    // console.log(`Book added to store`)
 
-    // 1.1
-    transaction = await contract.addBook(["Plane",5])
-    receipt = await transaction.wait()
+    // // 1.1
+    // transaction = await contract.addBook(["Plane",5])
+    // receipt = await transaction.wait()
 
-    if(receipt.status !== 1){
-      console.log("Transaction failed")
-      return
-    }
-    console.log(`Book added to store`)
+    // if(receipt.status !== 1){
+    //   console.log("Transaction failed")
+    //   return
+    // }
+    // console.log(`Book added to store`)
 
-    // 2
-    const availableBooks = await contract.showAvailable()
-    console.log(`Available books,  ${availableBooks}`)
+    // // 2
+    // const availableBooks = await contract.showAvailable()
+    // console.log(`Available books,  ${availableBooks}`)
 
-    // 2.1
-    let bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // // 2.1
+    // let bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
-    // 3
-    transaction = await contract.rentBook("Boat")
-    receipt =  await transaction.wait()
-    console.log("Book Rented")
+    // // 3
+    // transaction = await contract.rentBook("Boat")
+    // receipt =  await transaction.wait()
+    // console.log("Book Rented")
 
-    bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
-    // 3.2
-    transaction = await contract.rentBook("Boat")
-    receipt =  await transaction.wait()
-    console.log("Book Rented")
+    // // 3.2
+    // transaction = await contract.rentBook("Boat")
+    // receipt =  await transaction.wait()
+    // console.log("Book Rented")
 
-    bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
-    // 3.3
-    transaction = await contract.rentBook("Boat")
-    receipt =  await transaction.wait()
-    console.log("Book Rented")
+    // // 3.3
+    // transaction = await contract.rentBook("Boat")
+    // receipt =  await transaction.wait()
+    // console.log("Book Rented")
 
-    bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
     // 3.4
-    let rentners = await contract.checkRenters("Boat")
+    let rentners = await contract.showRenters("Boat")
     console.log(`Rentners,  ${rentners}`)
 
     // 4
-    transaction = await contract.returnBook("Boat")
+    transaction = await contract.returnBook("Boating")
     receipt =  await transaction.wait()
     console.log("Book returned")
 
@@ -82,7 +82,7 @@ async function interact() {
     bookCount = await contract.checkBookCount("Boat")
     console.log(`Books count,  ${bookCount}`)
 
-    rentners = await contract.checkRenters("Boat")
+    rentners = await contract.showRenters("Boat")
     console.log(`Rentners,  ${rentners}`)
 
 
