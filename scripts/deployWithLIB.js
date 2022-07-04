@@ -6,15 +6,15 @@ const BookABI = require("../artifacts/contracts/BookStore.sol/BookStore.json");
 const { ethers } = require("hardhat");
 
 async function deployWithLIB (){
-    const provider = new hre.ethers.providers.getDefaultProvider("http://localhost:8545");
-    const signer = new hre.ethers.Wallet("0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e",provider);
+    const provider = new hre.ethers.providers.getDefaultProvider("ropsten");
+    const signer = new hre.ethers.Wallet(process.env.PRIVATE_KEY,provider);
     const bookFactory =  await  hre.ethers.getContractFactory("BookStore",signer);
 
     // 2
     const bookContract = await bookFactory.deploy();
     console.log("Deploying Contract")
     await bookContract.deployed()
-    console.log("Contract deployed")
+    console.log("Contract deployed",bookContract.address)
 
     const libContractAddr = await bookContract.LIB();
 	
@@ -38,64 +38,64 @@ async function deployWithLIB (){
     console.log("Books Role", await libContract.hasRole(ethers.utils.formatBytes32String("MINTER_ROLE"),bookContract.address))
 
     //3
-    const parsedEth = hre.ethers.utils.parseEther("1")
-     trx = await bookContract.wrap({value:parsedEth})
+    // const parsedEth = hre.ethers.utils.parseEther("0.1")
+    //  trx = await bookContract.wrap({value:parsedEth})
 
-    console.log("Minting")
-    await trx.wait()
-    console.log("Done")
+    // console.log("Minting")
+    // await trx.wait()
+    // console.log("Done")
 
-    console.log("Books balance",await provider.getBalance(bookContract.address))
-    console.log("Signer balance",await libContract.balanceOf( signer.address))
-    console.log("LIB balance", await provider.getBalance(signer.address))
+    // console.log("Books balance",await provider.getBalance(bookContract.address))
+    // console.log("Signer balance",await libContract.balanceOf( signer.address))
+    // console.log("LIB balance", await provider.getBalance(signer.address))
 
-    trx = await libContract.approve(bookContract.address,parsedEth)
-    await trx.wait()
-    console.log("Approved")
+    // trx = await libContract.approve(bookContract.address,parsedEth)
+    // await trx.wait()
+    // console.log("Approved")
 
-    trx = await bookContract.unwrap(parsedEth)
-    await trx.wait()
+    // trx = await bookContract.unwrap(parsedEth)
+    // await trx.wait()
 
-    console.log("Books balance",await provider.getBalance(bookContract.address))
-    console.log("LIB balance",await libContract.balanceOf( signer.address))
-    console.log("LIB balance", await provider.getBalance(signer.address))
+    // console.log("Books balance",await provider.getBalance(bookContract.address))
+    // console.log("LIB balance",await libContract.balanceOf( signer.address))
+    // console.log("LIB balance", await provider.getBalance(signer.address))
 
-    trx = await bookContract.addBook("Boat",8)
-    await trx.wait()
-    console.log("Book added")
+    // trx = await bookContract.addBook("Boat",8)
+    // await trx.wait()
+    // console.log("Book added")
 
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
-    trx = await bookContract.rentBook("Boat", {value:parsedEth})
-    await trx.wait()
-    console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
+    // trx = await bookContract.rentBook("Boat", {value:parsedEth})
+    // await trx.wait()
+    // console.log("Book rented")
     
     
-    console.log("Store Coin balance",await libContract.balanceOf( bookContract.address))
-    console.log("Admin balance",await provider.getBalance( signer.address))
+    // console.log("Store Coin balance",await libContract.balanceOf( bookContract.address))
+    // console.log("Admin balance",await provider.getBalance( signer.address))
 
-    console.log("Withdrawing Coins")
-    trx =  await bookContract.withdrawCoins()
-    await trx.wait()
+    // console.log("Withdrawing Coins")
+    // trx =  await bookContract.withdrawCoins()
+    // await trx.wait()
 
-    console.log("Store Coin balance",await libContract.balanceOf( signer.address))
-    console.log("Admin balance",await provider.getBalance( signer.address))
+    // console.log("Store Coin balance",await libContract.balanceOf( signer.address))
+    // console.log("Admin balance",await provider.getBalance( signer.address))
 
 }
 

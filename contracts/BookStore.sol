@@ -91,16 +91,15 @@ contract BookStore is Ownable{
    }
 
    function rentBook(string calldata _name) external payable isAvailable(_name){
-       if(msg.value < 100000000000000000){
-           revert("Rent sum send is lower than 0.1 ETH");
+       if(LIB.balanceOf(msg.sender) < 100000000000000000){
+           revert("Not enough LIB");
        }
 
        if(checkBookCount[_name] < 1){
            revert BookOutOfStock();
        }
 
-        // Minting coins on the bookstore account
-       LIB.mint(address(this),msg.value);
+       LIB.transferFrom(msg.sender, address(this), 100000000000000000);
        
        checkBookCount[_name] -= 1;
        booksMap[_name].renters.push(msg.sender);

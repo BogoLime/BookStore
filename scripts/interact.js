@@ -1,15 +1,21 @@
 
+const { ethers } = require("hardhat");
 const hre = require("hardhat");
 require('dotenv').config()
 
-
+const LibABI = require ("../artifacts/contracts/LIBToken.sol/LIBToken.json")
 const {abi} = require("../artifacts/contracts/BookStore.sol/BookStore.json")
 
 async function interact() {
-    const provider = new hre.ethers.providers.InfuraProvider("ropsten",process.env["INFURA_KEY"])
+    const provider = new hre.ethers.providers.getDefaultProvider("ropsten")
     const signer =  new hre.ethers.Wallet(process.env["PRIVATE_KEY"],provider)
-    const contract = new hre.ethers.Contract(process.env["CONTRACT_ADDR"], abi, signer)
-    
+    const contract = new hre.ethers.Contract("0xAc34cFeC932f631026F744C53d7C5f2D1dc5cA3cw", abi, signer)
+
+    const libContractAddr = await contract.LIB();
+	
+	  const libContract = new ethers.Contract(libContractAddr, LibABI.abi, signer)
+
+  
     // // 1
     // let transaction = await contract.addBook("Boat",5)
     // let receipt = await transaction.wait()
@@ -19,6 +25,16 @@ async function interact() {
     //   return
     // }
     // console.log(`Book added to store`)
+
+
+    const parsedEth = hre.ethers.utils.parseEther("0.2")
+    trx = await contract.wrap({value:parsedEth})
+
+    console.log("Minting")
+    await trx.wait()
+    console.log("Done")
+
+    console.log("Minted for account", await libContract.balanceOf(signer.address) )
 
     // // 1.1
     // transaction = await contract.addBook("Plane",5)
@@ -59,13 +75,13 @@ async function interact() {
     // receipt =  await transaction.wait()
     // console.log("Book Rented")
 
-    const availableBooks = await contract.showAvailable()
-    console.log(`Available books,  ${availableBooks}`)
+    // const availableBooks = await contract.showAvailable()
+    // console.log(`Available books,  ${availableBooks}`)
 
-    bookCount = await contract.checkBookCount("Zaratustra")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Zaratustra")
+    // console.log(`Books count,  ${bookCount}`)
 
-    // // 3.4
+    // // // 3.4
     // let rentners = await contract.showRenters("Boat")
     // console.log(`Rentners,  ${rentners}`)
 
