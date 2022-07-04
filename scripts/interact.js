@@ -59,31 +59,34 @@ async function interact() {
     // receipt =  await transaction.wait()
     // console.log("Book Rented")
 
-    bookCount = await contract.checkBookCount("Boat")
+    const availableBooks = await contract.showAvailable()
+    console.log(`Available books,  ${availableBooks}`)
+
+    bookCount = await contract.checkBookCount("Zaratustra")
     console.log(`Books count,  ${bookCount}`)
 
-    // 3.4
-    let rentners = await contract.showRenters("Boat")
-    console.log(`Rentners,  ${rentners}`)
+    // // 3.4
+    // let rentners = await contract.showRenters("Boat")
+    // console.log(`Rentners,  ${rentners}`)
 
-    // 4
-    transaction = await contract.returnBook("Boat")
-    receipt =  await transaction.wait()
-    console.log("Book returned")
+    // // 4
+    // transaction = await contract.returnBook("Boat")
+    // receipt =  await transaction.wait()
+    // console.log("Book returned")
 
-    bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
-    //5
-    transaction = await contract.returnBook("Boat")
-    receipt =  await transaction.wait()
-    console.log("Book returned")
+    // //5
+    // transaction = await contract.returnBook("Boat")
+    // receipt =  await transaction.wait()
+    // console.log("Book returned")
 
-    bookCount = await contract.checkBookCount("Boat")
-    console.log(`Books count,  ${bookCount}`)
+    // bookCount = await contract.checkBookCount("Boat")
+    // console.log(`Books count,  ${bookCount}`)
 
-    rentners = await contract.showRenters("Boat")
-    console.log(`Rentners,  ${rentners}`)
+    // rentners = await contract.showRenters("Boat")
+    // console.log(`Rentners,  ${rentners}`)
 
 
 }
